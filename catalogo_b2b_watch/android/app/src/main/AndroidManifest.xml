@@ -3,12 +3,11 @@
     <uses-feature android:name="android.hardware.type.watch" android:required="false" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-feature android:name="android.hardware.type.watch" />
-
     <application
         android:label="catalogo_b2b_watch"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+         android:enableOnBackInvokedCallback="true">
         
         <meta-data
             android:name="com.google.android.wearable.standalone"

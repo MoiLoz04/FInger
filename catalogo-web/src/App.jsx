@@ -10,6 +10,9 @@ import Register from "./pages/Register";
 import Catalog from "./pages/Catalog";
 import QuoteForm from "./pages/QuoteForm";
 import History from "./pages/History";
+import Terminos from "./pages/Terminos";
+import Privacidad from "./pages/Privacidad";
+
 
 function AppShell() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -44,6 +47,8 @@ function AuthGate() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/terminos" element={<Terminos />} />
+      <Route path="/privacidad" element={<Privacidad />} />  
       <Route
         path="/*"
         element={

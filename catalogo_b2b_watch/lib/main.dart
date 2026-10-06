@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'services/supabase_service.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
+import 'widgets/auth_guard.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +36,7 @@ class CatalogoWatchApp extends StatelessWidget {
         textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme),
       ),
       home: SupabaseService.instance.isLoggedIn
-          ? const HomeScreen()
+          ? const AuthGuard(child: HomeScreen())
           : const LoginScreen(),
     );
   }

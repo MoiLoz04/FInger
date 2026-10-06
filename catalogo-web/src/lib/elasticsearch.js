@@ -1,31 +1,40 @@
-/**
- * Búsqueda de productos contra el índice "products" de Elasticsearch.
- *
- * NOTA IMPORTANTE: en este entorno de desarrollo local, el navegador llama
- * directo a Elasticsearch (http://localhost:9200). Para que esto funcione
- * sin errores de CORS, el contenedor de Elasticsearch debe levantarse con
- * CORS habilitado. Ver instrucciones al final del mensaje de esta fase.
- *
- * En producción NUNCA expongas Elasticsearch directo al navegador: esto
- * debe pasar por un backend/proxy que oculte la URL y agregue auth.
- * Para esta fase (entorno local de desarrollo) lo dejamos directo por
- * simplicidad, tal como pide el brief original.
- */
-
 const ES_URL = import.meta.env.VITE_ELASTICSEARCH_URL || "http://localhost:9200";
 
 export async function searchProducts(query) {
-  // Sin texto de búsqueda -> no pegamos a ES, el caller debe traer
-  // el catálogo completo desde Supabase en ese caso.
   if (!query || !query.trim()) return null;
 
   const body = {
     query: {
       bool: {
         should: [
-          { match: { nombre: { query, boost: 3 } } },
-          { match: { descripcion: { query, boost: 1 } } },
-          { match: { categoria: { query, boost: 2 } } },
+          {
+            match: {
+              nombre: {
+                query,
+                boost: 3,
+                fuzziness: "AUTO",
+                prefix_length: 1,
+              },
+            },
+          },
+          {
+            match: {
+              descripcion: {
+                query,
+                boost: 1,
+                fuzziness: "AUTO",
+              },
+            },
+          },
+          {
+            match: {
+              categoria: {
+                query,
+                boost: 2,
+                fuzziness: "AUTO",
+              },
+            },
+          },
         ],
         minimum_should_match: 1,
       },
@@ -40,16 +49,12 @@ export async function searchProducts(query) {
       body: JSON.stringify(body),
     });
 
-    if (!res.ok) {
-      throw new Error(`Elasticsearch respondió ${res.status}`);
-    }
+    if (!res.ok) throw new Error(`ES respondió ${res.status}`);
 
     const data = await res.json();
     return data.hits.hits.map((hit) => ({ id: hit._id, ...hit._source }));
   } catch (err) {
-    console.error("Error buscando en Elasticsearch:", err);
-    // Falla silenciosa: el componente que llama decide el fallback
-    // (normalmente, mostrar el catálogo completo de Supabase).
+    console.warn("⚠️ Elasticsearch no disponible, usando búsqueda local:", err.message);
     return [];
   }
 }

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from 'react-router-dom';
+
 import { MapPin, Phone, Mail, Linkedin, Twitter, Facebook } from "lucide-react";
 
 export default function Footer() {
@@ -15,6 +17,10 @@ export default function Footer() {
 
   return (
     <footer id="soporte" className="bg-graphite text-bone/80 mt-auto">
+      <div className="flex gap-4 text-xs text-steel mt-4">
+  <Link to="/terminos" className="hover:text-brand-500">Términos de Uso</Link>
+  <Link to="/privacidad" className="hover:text-brand-500">Aviso de Privacidad</Link>
+</div>
       <div className="max-w-7xl mx-auto px-4 lg:px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* Contacto */}
         <div>
@@ -109,7 +115,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
+      
       <div className="border-t border-white/10 py-4 text-center text-xs text-steel font-mono">
         © {new Date().getFullYear()} INDUSTRIA B2B · TODOS LOS DERECHOS RESERVADOS
       </div>

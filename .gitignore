@@ -4,3 +4,4 @@ dist/
 build/
 .env
 catalogo-web/.env.example
+**/.env.example
